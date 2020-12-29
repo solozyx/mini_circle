@@ -11,7 +11,8 @@
 
 <view class="tab">
     <block wx:for="{{tabList}}" wx:key='{{index}}'>
-        <view bindtap='bindChangeTab' data-index='{{index}}' class='{{item.isSelect?"tab-se":"tab-no"}}'>{{item.name}}
+        <view bindtap='bindChangeTab' data-index='{{index}}' class='{{item.isSelect?"tab-se":"tab-no"}}'>
+            {{item.name}}
         </view>
     </block>
 </view>
@@ -26,7 +27,8 @@
             <view class="username" style="color:red;font-weight:600;">涿州圈子</view>
             <view class="content">
                 <text>发布、点赞、评论功能需授权小程序使用您的头像和昵称。\n\n发布违规信息将被永久封禁。\n\n</text>
-                <button class='open-btn' open-type="getUserInfo" bindgetuserinfo="getUserInfo" size='mini'>点击此处获取头像昵称
+                <button class='open-btn' open-type="getUserInfo" bindgetuserinfo="getUserInfo" size='mini'>
+                    点击此处获取头像昵称
                 </button>
             </view>
             <!--            <view class='timeArea'>-->
@@ -40,7 +42,7 @@
 </view>
 
 
-<view class="top-circle" wx:if="{{tabIndex===3}}">
+<view class="top-circle" wx:if="{{tabIndex===0}}">
     <view class="circle" wx:for="{{topData}}" wx:key="{{index}}" wx:for-item="itemName" wx:for-index="indexN">
         <view class="row">
             <view>
