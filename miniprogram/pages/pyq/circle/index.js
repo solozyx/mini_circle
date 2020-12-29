@@ -1,4 +1,5 @@
 const app = getApp()
+
 Page({
     data: {
         statusBarHeight: app.globalData.statusBarHeight,
@@ -13,13 +14,14 @@ Page({
             {name: "交友", isSelect: false},
         ],
 
+        userInfo: undefined,
+
         wallData: [],
         showZan: -1, //显示点赞按钮
         showPinLun: false,
         nmAvator: '/image/pyq/ng.jpg',
         commentValue: '',
         placeholderPL: '评论',
-        userInfo: undefined,
         batchTimes: undefined, //分页
         btoText: "正在加载...",
         adminOpenid: "oOmqu4pDpN-1db4Ms_U0fjmCfBAw",
@@ -29,6 +31,42 @@ Page({
             path: '/pages/pyq/circle/index',
             imageUrl: "/image/pyq/pyq03.jpg",
         } //转发样式
+    },
+
+    onLoad: function (options) {
+        var that = this
+        if (app.globalData.userInfo) {
+            this.setData({
+                userInfo: app.globalData.userInfo
+            })
+        } else {
+            // 查看是否授权
+            wx.getSetting({
+                success(res) {
+                    if (res.authSetting['scope.userInfo']) {
+                        // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+                        wx.getUserInfo({
+                            success(res) {
+                                that.setData({
+                                    userInfo: res.userInfo
+                                })
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+        this.getWallData(0, 10, false)
+
+        wx.cloud.callFunction({
+            name: 'login'
+        }).then(res => {
+            console.log(res.result.openid)
+            that.setData({
+                openid: res.result.openid
+            })
+        })
     },
 
     getUserInfo: function (e) {
@@ -506,46 +544,6 @@ Page({
             }
         })
     },
-
-    onLoad: function (options) {
-        var that = this
-        if (app.globalData.userInfo) {
-            this.setData({
-                userInfo: app.globalData.userInfo
-            })
-        } else {
-            // 查看是否授权
-            wx.getSetting({
-                success(res) {
-                    if (res.authSetting['scope.userInfo']) {
-                        // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                        wx.getUserInfo({
-                            success(res) {
-                                that.setData({
-                                    userInfo: res.userInfo
-                                })
-                            }
-                        })
-                    }
-                }
-            })
-        }
-
-
-        this.getWallData(0, 10, false)
-
-        wx.cloud.callFunction({
-            name: 'login'
-        }).then(res => {
-            console.log(res.result.openid)
-
-            that.setData({
-                openid: res.result.openid
-            })
-        })
-
-    },
-
 
     toShowZan(e) {
         if (e.currentTarget.dataset.index === this.data.showZan) {
